@@ -20,6 +20,8 @@ import {
 } from "./ui/form"
 import { useAuthStore } from "@/auth"
 import { SignInFormData, signInFormResolver } from "@/lib/forms/signin.form"
+import { toast } from "sonner"
+import { AxiosError } from "axios"
 
 export function SigninForm({
   className,
@@ -37,7 +39,23 @@ export function SigninForm({
     try {
       await useAuthStore.getState().signin(values)
     } catch (error) {
-      console.log(error)
+      if (!(error instanceof AxiosError)) {
+        toast.error("Something went wrong.", {
+          description: "Your sign in request failed. Please try again.",
+        })
+      } else if (error.response?.status === 400) {
+        toast.error("Data validation failed.", {
+          description: "Please ensure all fields meet the required criteria.",
+        })
+      } else if (error.response?.status === 403) {
+        toast.error("Authentication failed.", {
+          description: "Please ensure that your credentials are correct.",
+        })
+      } else {
+        toast.error("Sign in failed.", {
+          description: "Your sign in request failed. Please try again.",
+        })
+      }
     }
   }
 
