@@ -1,6 +1,4 @@
-import { z } from "zod"
 import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -20,26 +18,27 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form"
-
-const singInFormSchema = z.object({
-  email: z.string().email(),
-  password: z.string().nonempty(),
-})
+import { useAuthStore } from "@/auth"
+import { SignInFormData, signInFormResolver } from "@/lib/forms/signin.form"
 
 export function SigninForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const form = useForm<z.infer<typeof singInFormSchema>>({
-    resolver: zodResolver(singInFormSchema),
+  const form = useForm<SignInFormData>({
+    resolver: signInFormResolver,
     defaultValues: {
       email: "",
       password: "",
     },
   })
 
-  function onSubmit(values: z.infer<typeof singInFormSchema>) {
-    console.log(values)
+  async function onSubmit(values: SignInFormData) {
+    try {
+      await useAuthStore.getState().signin(values)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
