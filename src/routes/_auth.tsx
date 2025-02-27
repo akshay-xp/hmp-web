@@ -1,12 +1,11 @@
-import { SigninForm } from "@/components/signin-form"
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router"
 import { GalleryVerticalEnd } from "lucide-react"
 
-export const Route = createFileRoute("/signin")({
-  component: RouteComponent,
+export const Route = createFileRoute("/_auth")({
+  component: LayoutComponent,
 })
 
-function RouteComponent() {
+function LayoutComponent() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -16,7 +15,7 @@ function RouteComponent() {
           </div>
           Reverse Int.
         </Link>
-        <SigninForm />
+        <Outlet />
       </div>
     </div>
   )

@@ -1,24 +1,9 @@
 import { privateApi } from "@/api/axios"
 import { useAuthStore } from "@/auth"
 import { Button } from "@/components/ui/button"
-import { createFileRoute, redirect } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 
-export const Route = createFileRoute("/")({
-  beforeLoad: async ({ location }) => {
-    if (!useAuthStore.getState().accessToken) {
-      const newAccessToken =
-        !useAuthStore.getState().isRefreshRetry &&
-        (await useAuthStore.getState().refreshToken())
-      if (!newAccessToken) {
-        throw redirect({
-          to: "/signin",
-          search: {
-            redirect: location.href,
-          },
-        })
-      }
-    }
-  },
+export const Route = createFileRoute("/_private/")({
   component: RouteComponent,
 })
 
