@@ -1,7 +1,7 @@
 import { privateApi } from "@/api/axios"
 import { useAuthStore } from "@/auth"
 import { Button } from "@/components/ui/button"
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_private/")({
   component: RouteComponent,
@@ -20,6 +20,7 @@ function RouteComponent() {
   return (
     <main>
       <h3 className="text-3xl underline text-indigo-500">Hello!</h3>
+      <Link to="/dashboard">Dashboard</Link>
       <Button variant="ghost" onClick={handleClick}>
         Submit
       </Button>
