@@ -41,6 +41,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.0.8
         version: 4.0.8(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(lightningcss@1.29.1)(tsx@4.19.3))
+      '@tanstack/react-query':
+        specifier: ^5.67.2
+        version: 5.67.2(react@19.0.0)
       '@tanstack/react-router':
         specifier: ^1.109.2
         version: 1.109.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -90,9 +93,15 @@ importers:
       '@eslint/js':
         specifier: ^9.19.0
         version: 9.21.0
+      '@tanstack/eslint-plugin-query':
+        specifier: ^5.67.2
+        version: 5.67.2(eslint@9.21.0(jiti@2.4.2))(typescript@5.7.3)
       '@tanstack/eslint-plugin-router':
         specifier: ^1.105.0
         version: 1.105.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.7.3)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.67.2
+        version: 5.67.2(@tanstack/react-query@5.67.2(react@19.0.0))(react@19.0.0)
       '@tanstack/router-devtools':
         specifier: ^1.109.2
         version: 1.109.2(@tanstack/react-router@1.109.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(csstype@3.1.3)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1240,6 +1249,11 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6
 
+  '@tanstack/eslint-plugin-query@5.67.2':
+    resolution: {integrity: sha512-bWAA/0lYGBNv7lIV6tID2o5wC6yWUjkh9yx8ow9YMP3brxIhuUPdCAtJBhXL2nVzJTnc6FRrL401KFG5PPEkZg==}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
+
   '@tanstack/eslint-plugin-router@1.105.0':
     resolution: {integrity: sha512-qrtXf8QVzmo+gPFHgz0a3Lqeuo+ebazjstncHyjcXU8vgwJ4n8cseW4LGhMLJZ6eimdFqbOvc1P5Fxjac+R1xQ==}
     peerDependencies:
@@ -1248,6 +1262,23 @@ packages:
   '@tanstack/history@1.99.13':
     resolution: {integrity: sha512-JMd7USmnp8zV8BRGIjALqzPxazvKtQ7PGXQC7n39HpbqdsmfV2ePCzieO84IvN+mwsTrXErpbjI4BfKCa+ZNCg==}
     engines: {node: '>=12'}
+
+  '@tanstack/query-core@5.67.2':
+    resolution: {integrity: sha512-+iaFJ/pt8TaApCk6LuZ0WHS/ECVfTzrxDOEL9HH9Dayyb5OVuomLzDXeSaI2GlGT/8HN7bDGiRXDts3LV+u6ww==}
+
+  '@tanstack/query-devtools@5.67.2':
+    resolution: {integrity: sha512-O4QXFFd7xqp6EX7sdvc9tsVO8nm4lpWBqwpgjpVLW5g7IeOY6VnS/xvs/YzbRhBVkKTMaJMOUGU7NhSX+YGoNg==}
+
+  '@tanstack/react-query-devtools@5.67.2':
+    resolution: {integrity: sha512-cmj2DxBc+/9btQ66n5xI8wTtAma2BLVa403K7zIYiguzJ/kV201jnGensYqJeu1Rd8uRMLLRM74jLVMLDWNRJA==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.67.2
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.67.2':
+    resolution: {integrity: sha512-6Sa+BVNJWhAV4QHvIqM73norNeGRWGC3ftN0Ix87cmMvI215I1wyJ44KUTt/9a0V9YimfGcg25AITaYVel71Og==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@tanstack/react-router@1.109.2':
     resolution: {integrity: sha512-cJZGIvYIrd5lcwbwoB2vxJe379TQZIM5/RAzlDSrvV5KAPlkmK3cqZHZ8zPrsZIBASEyERM8Od+jM9s3qDTXkA==}
@@ -3195,6 +3226,14 @@ snapshots:
       tailwindcss: 4.0.8
       vite: 6.1.1(@types/node@22.13.5)(jiti@2.4.2)(lightningcss@1.29.1)(tsx@4.19.3)
 
+  '@tanstack/eslint-plugin-query@5.67.2(eslint@9.21.0(jiti@2.4.2))(typescript@5.7.3)':
+    dependencies:
+      '@typescript-eslint/utils': 8.24.1(eslint@9.21.0(jiti@2.4.2))(typescript@5.7.3)
+      eslint: 9.21.0(jiti@2.4.2)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   '@tanstack/eslint-plugin-router@1.105.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.7.3)':
     dependencies:
       '@typescript-eslint/utils': 8.24.1(eslint@9.21.0(jiti@2.4.2))(typescript@5.7.3)
@@ -3204,6 +3243,21 @@ snapshots:
       - typescript
 
   '@tanstack/history@1.99.13': {}
+
+  '@tanstack/query-core@5.67.2': {}
+
+  '@tanstack/query-devtools@5.67.2': {}
+
+  '@tanstack/react-query-devtools@5.67.2(@tanstack/react-query@5.67.2(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-devtools': 5.67.2
+      '@tanstack/react-query': 5.67.2(react@19.0.0)
+      react: 19.0.0
+
+  '@tanstack/react-query@5.67.2(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.67.2
+      react: 19.0.0
 
   '@tanstack/react-router@1.109.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:

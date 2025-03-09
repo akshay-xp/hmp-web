@@ -1,4 +1,3 @@
-import { privateApi } from "@/api/axios"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -13,9 +12,13 @@ import {
   ResearchFormData,
   researchFormResolver,
 } from "@/lib/forms/research.form"
+import { useReviewStore } from "@/modules/reviews"
 import { useForm } from "react-hook-form"
 
 export function ResearchForm() {
+  const setGetCustomerQueries = useReviewStore(
+    (state) => state.setGetCustomerQueries
+  )
   const form = useForm<ResearchFormData>({
     resolver: researchFormResolver,
     defaultValues: {
@@ -25,9 +28,7 @@ export function ResearchForm() {
   })
 
   async function onSubmit(values: ResearchFormData) {
-    privateApi.get("/customer", {
-      params: { email: values.email, phone: values.phone },
-    })
+    setGetCustomerQueries(values)
   }
 
   return (
