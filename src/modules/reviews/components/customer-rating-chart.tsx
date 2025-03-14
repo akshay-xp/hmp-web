@@ -53,7 +53,7 @@ export function CustomerRatingChart() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="reviews" fill="var(--color-desktop)" radius={8}>
+            <Bar dataKey="reviews" fill="var(--primary)" radius={8}>
               <LabelList
                 position="insideTop"
                 offset={12}

@@ -4,10 +4,10 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
-  Sparkles,
 } from "lucide-react"
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -23,9 +23,11 @@ import {
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "./ui/avatar"
 import { useAuthStore } from "@/auth"
+import { useTheme } from "@/modules/theme/use-theme"
 
 export function NavUser() {
   const { isMobile } = useSidebar()
+  const { theme, setTheme } = useTheme()
   const signout = useAuthStore((state) => state.signout)
 
   return (
@@ -66,10 +68,14 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
+              <DropdownMenuCheckboxItem
+                checked={theme === "dark"}
+                onCheckedChange={() =>
+                  setTheme(theme === "dark" ? "light" : "dark")
+                }
+              >
+                Dark Theme
+              </DropdownMenuCheckboxItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
@@ -89,7 +95,7 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={signout}>
               <LogOut />
-              Log out
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
