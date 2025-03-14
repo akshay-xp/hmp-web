@@ -1,10 +1,18 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { isValidPhoneNumber } from "react-phone-number-input"
 
-const researchFormSchema = z
+export const researchFormSchema = z
   .object({
-    email: z.string().email(),
-    phone: z.string(),
+    email: z
+      .string()
+      .trim()
+      .email({ message: "Enter a valid email" })
+      .or(z.literal("").transform(() => undefined)),
+    phone: z
+      .string()
+      .refine(isValidPhoneNumber, { message: "Enter a valid phone number" })
+      .or(z.literal("").transform(() => undefined)),
   })
   .partial()
 

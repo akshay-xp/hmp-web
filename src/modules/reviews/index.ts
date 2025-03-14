@@ -1,2 +1,2 @@
 export { useReviewStore } from "./review.store"
-export { getCustomer } from "./query-functions"
+export { getCustomer, getReview, getReviews } from "./query-functions"

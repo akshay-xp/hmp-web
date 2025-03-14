@@ -3,7 +3,6 @@ import {
   addReviewFormResolver,
 } from "@/lib/forms/add-review.form"
 import { useForm } from "react-hook-form"
-import { Button } from "./ui/button"
 import {
   Form,
   FormControl,
@@ -11,13 +10,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form"
-import { Textarea } from "./ui/textarea"
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
+} from "@/components/ui/form"
+import { Textarea } from "@/components/ui/textarea"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { StarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useReviewStore } from "@/modules/reviews"
+import { Button } from "@/components/ui/button"
 
-export function AddReviewForm() {
+export function AddReviewForm({ customerId }: { customerId?: number }) {
   const form = useForm<AddReviewFormData>({
     resolver: addReviewFormResolver,
     defaultValues: {
@@ -27,7 +28,7 @@ export function AddReviewForm() {
   })
 
   function onSubmit(values: AddReviewFormData) {
-    console.log(values)
+    useReviewStore.getState().addReview(values, customerId)
   }
 
   return (
@@ -35,7 +36,7 @@ export function AddReviewForm() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid gap-6">
           <div className="grid gap-6">
-            <div className="grid gap-2 place-items-center">
+            <div className="grid gap-2">
               <FormField
                 control={form.control}
                 name="rating"

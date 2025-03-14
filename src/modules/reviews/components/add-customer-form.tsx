@@ -8,27 +8,32 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { PhoneInput } from "@/components/ui/phone-input"
 import {
-  ResearchFormData,
-  researchFormResolver,
-} from "@/lib/forms/research.form"
+  AddCustomerFormData,
+  addCustomerFormResolver,
+} from "@/lib/forms/add-customer.form"
 import { useReviewStore } from "@/modules/reviews"
 import { useForm } from "react-hook-form"
 
-export function ResearchForm() {
-  const setGetCustomerQueries = useReviewStore(
-    (state) => state.setGetCustomerQueries
-  )
-  const form = useForm<ResearchFormData>({
-    resolver: researchFormResolver,
+export function AddCustomerForm({
+  email,
+  phone,
+}: {
+  email?: string
+  phone?: string
+}) {
+  const form = useForm<AddCustomerFormData>({
+    resolver: addCustomerFormResolver,
     defaultValues: {
-      email: undefined,
-      phone: undefined,
+      email,
+      phone,
+      name: undefined,
     },
   })
 
-  async function onSubmit(values: ResearchFormData) {
-    setGetCustomerQueries(values)
+  async function onSubmit(values: AddCustomerFormData) {
+    useReviewStore.getState().addCustomer(values)
   }
 
   return (
@@ -60,17 +65,35 @@ export function ResearchForm() {
                 control={form.control}
                 name="phone"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="relative">
                     <FormLabel>Phone</FormLabel>
                     <FormControl>
-                      <Input type="tel" {...field} />
+                      <PhoneInput
+                        placeholder="Enter a phone number"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <Button type="submit">Look up</Button>
+            <div className="grid gap-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button type="submit">Add Customer</Button>
           </div>
         </div>
       </form>

@@ -1,44 +1,40 @@
-import { AddReviewForm } from "@/components/add-review-form"
-import { ResearchForm } from "@/components/research-form"
 import { Separator } from "@/components/ui/separator"
-import { getCustomer, useReviewStore } from "@/modules/reviews"
-import { getReview, getReviews } from "@/modules/reviews/query-functions"
+import { researchFormSchema } from "@/lib/forms/research.form"
+import { getCustomer, getReview } from "@/modules/reviews"
+import { AddReviewForm } from "@/modules/reviews/components/add-review-form"
+import { CustomerReviews } from "@/modules/reviews/components/customer-reviews"
+import { CustomerSection } from "@/modules/reviews/components/customer-section"
+import { ResearchForm } from "@/modules/reviews/components/research-form"
 import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_private/")({
   component: RouteComponent,
+  validateSearch: researchFormSchema,
 })
 
 function RouteComponent() {
-  const email = useReviewStore((state) => state.customerEmail)
-  const phone = useReviewStore((state) => state.customerPhone)
-  const customerId = useReviewStore((state) => state.customerId)
-  const { data } = useQuery({
+  const { email, phone } = Route.useSearch()
+  const customerQuery = useQuery({
     queryKey: ["customer", { email, phone }],
     queryFn: () => getCustomer(email, phone),
     enabled: !!(email || phone),
   })
-  const { data: review } = useQuery({
+  const customerId: number | undefined = customerQuery?.data?.id
+  const reviewQuery = useQuery({
     queryKey: ["review", { customerId }],
     queryFn: () => getReview(customerId),
     enabled: !!customerId,
   })
-  const { data: reviews } = useQuery({
-    queryKey: ["reviews", { customerId }],
-    queryFn: () => getReviews(customerId),
-    enabled: !!customerId,
-  })
-
-  console.log(reviews)
 
   return (
-    <div className="grid gap-8 max-w-sm w-full mx-auto">
+    <div className="grid gap-6 max-w-xl w-full mx-auto py-5">
       <ResearchForm />
       <Separator />
-      <AddReviewForm />
-      <p>{data?.email}</p>
-      <p>{review?.rating}</p>
+      <CustomerSection />
+      {reviewQuery.isSuccess &&
+        (reviewQuery.data ? null : <AddReviewForm customerId={customerId} />)}
+      <CustomerReviews />
     </div>
   )
 }
