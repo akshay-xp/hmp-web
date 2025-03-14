@@ -15,11 +15,12 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { CircleHelp, Headset, Send, Star } from "lucide-react"
+import { Link } from "@tanstack/react-router"
 
 const primary = [
   {
     title: "Research Customers",
-    url: "/research",
+    url: "/",
     isActive: true,
     icon: Star,
   },
@@ -59,9 +60,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {primary.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={item.isActive}>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon /> {item.title}
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -74,9 +75,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {secondary.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={item.isActive}>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon /> {item.title}
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

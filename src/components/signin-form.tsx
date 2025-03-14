@@ -116,7 +116,7 @@ export function SigninForm({
                     />
                   </div>
                   <Button type="submit" className="w-full">
-                    Sign in
+                    Continue
                   </Button>
                 </div>
                 <div className="text-center text-sm">
@@ -131,8 +131,9 @@ export function SigninForm({
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our&nbsp;
+        <Link to=".">Terms of Service</Link> and&nbsp;
+        <Link to=".">Privacy Policy</Link>.
       </div>
     </div>
   )

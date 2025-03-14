@@ -66,7 +66,7 @@ export function SignupForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Create you account</CardTitle>
-          <CardDescription>Sign up to access HMP</CardDescription>
+          <CardDescription>Sign up to access Reverse Int.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -142,7 +142,7 @@ export function SignupForm({
                     />
                   </div>
                   <Button type="submit" className="w-full">
-                    Sign up
+                    Continue
                   </Button>
                 </div>
                 <div className="text-center text-sm">
@@ -157,8 +157,9 @@ export function SignupForm({
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our&nbsp;
+        <Link to=".">Terms of Service</Link> and&nbsp;
+        <Link to=".">Privacy Policy</Link>.
       </div>
     </div>
   )
