@@ -3,8 +3,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { RouterProvider } from "@tanstack/react-router"
 
 import { queryClient } from "@/modules/query/query-client.ts"
+import { router } from "@/modules/router/tanstack-router.ts"
 import { ThemeProvider } from "@/modules/theme/theme-provider.tsx"
-import { router } from "@/router/tanstack-router.ts"
 
 export function App() {
   return (
