@@ -1,4 +1,5 @@
-import { privateApi } from "@/modules/api/axios"
+import { AddCustomerFormData } from "@/lib/forms/add-customer.form.ts"
+import { privateApi } from "@/modules/api/axios.ts"
 
 type Customer = {
   id: number
@@ -7,7 +8,7 @@ type Customer = {
   email: string | null
   createdAt: string
   updatedAt: string
-} | null
+}
 
 type Review = {
   createdAt: string
@@ -32,7 +33,7 @@ type Reviews = {
 export const getCustomer = async (
   email?: string,
   phone?: string
-): Promise<Customer> => {
+): Promise<Customer | null> => {
   const response = await privateApi.get("/customer", {
     params: {
       email,
@@ -58,6 +59,16 @@ export const getReviews = async (customerId?: number): Promise<Reviews> => {
     params: {
       customerId,
     },
+  })
+
+  return response.data
+}
+
+export const addCustomer = async (
+  values: AddCustomerFormData
+): Promise<Customer> => {
+  const response = await privateApi.post("customer", {
+    ...values,
   })
 
   return response.data
