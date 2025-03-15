@@ -1,8 +1,8 @@
 import { defaultApi } from "@/modules/api/axios"
 import { SignInFormData } from "@/lib/forms/signin.form"
 import { SignUpFormData } from "@/lib/forms/signup.form"
-import { router } from "@/router"
 import { create } from "zustand"
+import { router } from "@/router/tanstack-router"
 
 type AuthStore = {
   accessToken: string | null

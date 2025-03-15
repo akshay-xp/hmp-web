@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { StarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useReviewStore } from "@/modules/reviews"
+import { useReviewStore } from "@/modules/reviews/review.store"
 import { Button } from "@/components/ui/button"
 
 export function AddReviewForm({ customerId }: { customerId?: number }) {

@@ -1,4 +1,4 @@
-import { queryClient } from "@/query"
+import { queryClient } from "@/query/query-client"
 import { routeTree } from "@/routeTree.gen"
 import { createRouter } from "@tanstack/react-router"
 

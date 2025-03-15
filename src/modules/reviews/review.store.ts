@@ -1,8 +1,8 @@
 import { privateApi } from "@/modules/api/axios"
 import { AddCustomerFormData } from "@/lib/forms/add-customer.form"
 import { AddReviewFormData } from "@/lib/forms/add-review.form"
-import { queryClient } from "@/query"
 import { create } from "zustand"
+import { queryClient } from "@/query/query-client"
 
 type ReviewStore = {
   addReview: (values: AddReviewFormData, customerId?: number) => void

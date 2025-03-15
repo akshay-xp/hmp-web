@@ -1,9 +1,9 @@
 import { QueryClientProvider } from "@tanstack/react-query"
 import { RouterProvider } from "@tanstack/react-router"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { router } from "./router"
-import { queryClient } from "./query"
-import { ThemeProvider } from "./modules/theme"
+import { ThemeProvider } from "@/modules/theme/theme-provider"
+import { queryClient } from "@/query/query-client"
+import { router } from "@/router/tanstack-router"
 
 export function App() {
   return (

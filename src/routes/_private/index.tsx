@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator"
 import { researchFormSchema } from "@/lib/forms/research.form"
-import { getCustomer, getReview } from "@/modules/reviews"
+import { getCustomer, getReview } from "@/modules/reviews/query-functions"
 import { AddReviewForm } from "@/modules/reviews/components/add-review-form"
 import { CustomerReviews } from "@/modules/reviews/components/customer-reviews"
 import { CustomerSection } from "@/modules/reviews/components/customer-section"

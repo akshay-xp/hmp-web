@@ -13,7 +13,7 @@ import {
   AddCustomerFormData,
   addCustomerFormResolver,
 } from "@/lib/forms/add-customer.form"
-import { useReviewStore } from "@/modules/reviews"
+import { useReviewStore } from "@/modules/reviews/review.store"
 import { useForm } from "react-hook-form"
 
 export function AddCustomerForm({
