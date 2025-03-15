@@ -1,8 +1,9 @@
-import { privateApi } from "@/modules/api/axios"
-import { AddCustomerFormData } from "@/lib/forms/add-customer.form"
-import { AddReviewFormData } from "@/lib/forms/add-review.form"
 import { create } from "zustand"
-import { queryClient } from "@/query/query-client"
+
+import { AddCustomerFormData } from "@/lib/forms/add-customer.form.ts"
+import { AddReviewFormData } from "@/lib/forms/add-review.form.ts"
+import { privateApi } from "@/modules/api/axios.ts"
+import { queryClient } from "@/modules/query/query-client.ts"
 
 type ReviewStore = {
   addReview: (values: AddReviewFormData, customerId?: number) => void

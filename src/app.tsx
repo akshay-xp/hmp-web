@@ -1,9 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query"
-import { RouterProvider } from "@tanstack/react-router"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { ThemeProvider } from "@/modules/theme/theme-provider"
-import { queryClient } from "@/query/query-client"
-import { router } from "@/router/tanstack-router"
+import { RouterProvider } from "@tanstack/react-router"
+
+import { queryClient } from "@/modules/query/query-client.ts"
+import { ThemeProvider } from "@/modules/theme/theme-provider.tsx"
+import { router } from "@/router/tanstack-router.ts"
 
 export function App() {
   return (
