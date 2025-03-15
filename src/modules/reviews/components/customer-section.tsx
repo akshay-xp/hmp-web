@@ -1,8 +1,13 @@
 import { useQuery } from "@tanstack/react-query"
-import { getCustomer } from "../query-functions"
-import { AddCustomerForm } from "./add-customer-form"
-import { CustomerRatingChart } from "./customer-rating-chart"
-import { Route } from "@/routes/_private/index"
+
+import { EmailLink } from "@/components/ui/email-link.tsx"
+import { PhoneLink } from "@/components/ui/phone-link.tsx"
+import { Route } from "@/routes/_private/index.tsx"
+
+import { getCustomer } from "../query-functions.ts"
+
+import { AddCustomerForm } from "./add-customer-form.tsx"
+import { CustomerRatingChart } from "./customer-rating-chart.tsx"
 
 export function CustomerSection() {
   const { email, phone } = Route.useSearch()
@@ -17,11 +22,13 @@ export function CustomerSection() {
       <>
         <div>
           <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-            Anonymous
+            {data.name || "Anonymous"}
           </h2>
-          <p className="text-sm text-muted-foreground">
-            {[data.email, data.phone].filter(Boolean).join(" | ")}
-          </p>
+          <span className="text-sm text-muted-foreground">
+            <EmailLink email={data.email} />
+            {data.email && data.phone && " | "}
+            <PhoneLink phone={data.phone} />
+          </span>
         </div>
         <CustomerRatingChart />
       </>
