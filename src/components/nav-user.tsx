@@ -22,7 +22,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "./ui/avatar"
-import { useAuthStore } from "@/auth"
+import { useAuthStore } from "@/modules/auth/auth-store"
 import { useTheme } from "@/modules/theme/use-theme"
 
 export function NavUser() {

@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/auth"
+import { useAuthStore } from "@/modules/auth/auth-store"
 import axios, { AxiosError } from "axios"
 
 /**

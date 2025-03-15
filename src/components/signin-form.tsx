@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form"
-import { useAuthStore } from "@/auth"
+import { useAuthStore } from "@/modules/auth/auth-store"
 import { SignInFormData, signInFormResolver } from "@/lib/forms/signin.form"
 import { toast } from "sonner"
 import { AxiosError } from "axios"

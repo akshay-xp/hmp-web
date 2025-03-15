@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form"
-import { useAuthStore } from "@/auth"
+import { useAuthStore } from "@/modules/auth/auth-store"
 import { AxiosError } from "axios"
 import { toast } from "sonner"
 

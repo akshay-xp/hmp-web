@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/auth"
+import { useAuthStore } from "@/modules/auth/auth-store"
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 import { AppSidebar } from "@/components/app-sidebar"
 import {
