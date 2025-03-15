@@ -1,4 +1,4 @@
-import { privateApi } from "@/api/axios"
+import { privateApi } from "@/modules/api/axios"
 
 type Customer = {
   id: number

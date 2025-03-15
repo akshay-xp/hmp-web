@@ -1,4 +1,4 @@
-import { privateApi } from "@/api/axios"
+import { privateApi } from "@/modules/api/axios"
 import { AddCustomerFormData } from "@/lib/forms/add-customer.form"
 import { AddReviewFormData } from "@/lib/forms/add-review.form"
 import { queryClient } from "@/query"

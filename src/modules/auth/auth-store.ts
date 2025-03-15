@@ -1,4 +1,4 @@
-import { defaultApi } from "@/api/axios"
+import { defaultApi } from "@/modules/api/axios"
 import { SignInFormData } from "@/lib/forms/signin.form"
 import { SignUpFormData } from "@/lib/forms/signup.form"
 import { router } from "@/router"
