@@ -33,6 +33,7 @@ export default tseslint.config(
         "error",
         { ignoreRestSiblings: true },
       ],
+      "import/extensions": ["error", "ignorePackages"],
       "import/order": [
         "error",
         {
