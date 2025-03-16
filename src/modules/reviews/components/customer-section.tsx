@@ -7,7 +7,23 @@ import { Route } from "@/routes/_private/index.tsx"
 import { getCustomer } from "../query-functions.ts"
 
 import { AddCustomerForm } from "./add-customer-form.tsx"
-import { CustomerRatingChart } from "./customer-rating-chart.tsx"
+
+/**
+ * Todo:
+ * hotel review ui
+ * review tags
+ * edit
+ * delete + modal
+ *
+ * review chart
+ * total reviews for each rating + avg
+ * total reviews for each tag
+ *
+ * others reviews
+ * tags
+ * report
+ * sort + filter
+ */
 
 export function CustomerSection() {
   const { email, phone } = Route.useSearch()
@@ -30,7 +46,6 @@ export function CustomerSection() {
             <PhoneLink phone={data.phone} />
           </span>
         </div>
-        <CustomerRatingChart />
       </>
     ) : (
       <AddCustomerForm email={email} phone={phone} />

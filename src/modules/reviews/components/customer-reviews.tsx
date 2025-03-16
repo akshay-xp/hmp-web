@@ -1,9 +1,13 @@
 import { useQuery } from "@tanstack/react-query"
-import { getCustomer, getReviews } from "../query-functions"
 import { format } from "date-fns"
-import { Separator } from "@/components/ui/separator"
-import { Route } from "@/routes/_private/index"
-import { RatingStars } from "./rating-stars"
+
+import { Separator } from "@/components/ui/separator.tsx"
+import { Route } from "@/routes/_private/index.tsx"
+
+import { getCustomer, getReviews } from "../query-functions.ts"
+
+import { CustomerRatingChart } from "./customer-rating-chart.tsx"
+import { RatingStars } from "./rating-stars.tsx"
 
 export function CustomerReviews() {
   const { email, phone } = Route.useSearch()
@@ -22,6 +26,7 @@ export function CustomerReviews() {
   if (reviews.isSuccess) {
     return (
       <>
+        <CustomerRatingChart />
         {reviews.data.reviews.map((review) => (
           <div key={review.businessId} className="pb-6">
             <div className="flex items-start gap-4">
