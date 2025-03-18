@@ -1,6 +1,15 @@
-import { useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import { useNavigate } from "@tanstack/react-router"
 import { format } from "date-fns"
+import { ArrowUpDown, Filter, Flag } from "lucide-react"
 
+import { Button } from "@/components/ui/button.tsx"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu.tsx"
 import { Separator } from "@/components/ui/separator.tsx"
 import { Route } from "@/routes/_private/index.tsx"
 
@@ -10,42 +19,144 @@ import { CustomerRatingChart } from "./customer-rating-chart.tsx"
 import { RatingStars } from "./rating-stars.tsx"
 
 export function CustomerReviews() {
-  const { email, phone } = Route.useSearch()
+  const { email, phone, rating, sortBy } = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
   const customerQuery = useQuery({
     queryKey: ["customer", { email, phone }],
     queryFn: () => getCustomer(email, phone),
     enabled: !!(email || phone),
   })
   const customerId = customerQuery.data?.id
-  const reviews = useQuery({
-    queryKey: ["reviews", { customerId }],
-    queryFn: () => getReviews(customerId),
+
+  const { data, isSuccess, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    queryKey: ["reviews", { customerId, rating, sortBy }],
+    queryFn: ({ pageParam }) =>
+      getReviews(pageParam, customerId, rating, sortBy),
+    initialPageParam: {
+      cursorA: -1,
+      cursorB: -1,
+    },
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasMore
+        ? {
+            cursorA: lastPage.cursorA,
+            cursorB: lastPage.cursorB,
+          }
+        : undefined
+    },
     enabled: !!customerId,
   })
 
-  if (reviews.isSuccess) {
+  if (isSuccess) {
     return (
       <>
         <CustomerRatingChart />
-        {reviews.data.reviews.map((review) => (
-          <div key={review.businessId} className="pb-6">
-            <div className="flex items-start gap-4">
-              <div className="flex-1">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <RatingStars rating={review.rating} />
-                    <span className="mx-2">•</span>
-                    <time dateTime={review.updatedAt}>
-                      {format(new Date(review.updatedAt), "yyyy-MM-dd")}
-                    </time>
+        <div className="flex justify-between">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary">
+                {"Filter"}
+                <Filter />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate({ search: (prev) => ({ ...prev, rating: 1 }) })
+                }
+              >
+                1 ★
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate({ search: (prev) => ({ ...prev, rating: 2 }) })
+                }
+              >
+                2 ★
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate({ search: (prev) => ({ ...prev, rating: 3 }) })
+                }
+              >
+                3 ★
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate({ search: (prev) => ({ ...prev, rating: 4 }) })
+                }
+              >
+                4 ★
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate({ search: (prev) => ({ ...prev, rating: 5 }) })
+                }
+              >
+                5 ★
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary">
+                {"Sort By"}
+                <ArrowUpDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate({
+                    search: (prev) => ({ ...prev, sortBy: "createdAt" }),
+                  })
+                }
+              >
+                Recently Created
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate({
+                    search: (prev) => ({ ...prev, sortBy: "updatedAt" }),
+                  })
+                }
+              >
+                Recently Updated
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        {data.pages.map((page) => (
+          <>
+            {page.reviews.map((review) => (
+              <div key={review.businessId}>
+                <div className="flex items-start gap-4">
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                      <div className="flex items-center justify-between w-full text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <RatingStars rating={review.rating} />
+                          <span className="mx-2">•</span>
+                          <time dateTime={review.updatedAt}>
+                            {format(new Date(review.updatedAt), "yyyy-MM-dd")}
+                          </time>
+                        </div>
+                        <Button variant="ghost" size="icon" className="size-5">
+                          <Flag className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-sm">{review.comment}</p>
                   </div>
                 </div>
-                <p className="mt-2 text-sm">{review.comment}</p>
+                <Separator className="mt-6" />
               </div>
-            </div>
-            <Separator className="mt-6" />
-          </div>
+            ))}
+          </>
         ))}
+        {hasNextPage && (
+          <button onClick={() => fetchNextPage()}>load more</button>
+        )}
       </>
     )
   }

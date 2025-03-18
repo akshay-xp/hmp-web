@@ -11,14 +11,14 @@ type Customer = {
   updatedAt: string
 }
 
-type Review = {
+export type Review = {
   createdAt: string
   updatedAt: string
   rating: number
   comment: string | null
   customerId: number
   businessId: number
-} | null
+}
 
 type Reviews = {
   reviews: {
@@ -29,6 +29,9 @@ type Reviews = {
     createdAt: string
     updatedAt: string
   }[]
+  cursorA: number
+  cursorB: number
+  hasMore: boolean
 }
 
 export const getCustomer = async (
@@ -45,20 +48,31 @@ export const getCustomer = async (
   return response.data
 }
 
-export const getReview = async (customerId?: number): Promise<Review> => {
-  const response = await privateApi.get("/review", {
-    params: {
-      customerId,
-    },
-  })
+export const getReview = async (
+  customerId?: number
+): Promise<Review | null> => {
+  const response = await privateApi.get(`/review/${customerId}`)
 
   return response.data
 }
 
-export const getReviews = async (customerId?: number): Promise<Reviews> => {
-  const response = await privateApi.get("/review/all", {
+export const getReviews = async (
+  pageParam: { cursorA: number; cursorB: number },
+  customerId?: number,
+  rating?: number,
+  sortBy?: string
+): Promise<Reviews> => {
+  const cursors =
+    pageParam.cursorA !== -1 && pageParam.cursorB !== -1
+      ? {
+          ...pageParam,
+        }
+      : undefined
+  const response = await privateApi.get(`/review/${customerId}/all`, {
     params: {
-      customerId,
+      rating,
+      sortBy,
+      ...cursors,
     },
   })
 
@@ -76,11 +90,29 @@ export const addCustomer = async (
 }
 
 export const addReview = async (
-  values: AddReviewFormData & { customerId?: number }
+  values: AddReviewFormData & { customerId: number }
 ) => {
-  const response = await privateApi.post("review", {
-    ...values,
+  const { customerId, ...payload } = values
+  const response = await privateApi.post(`review/${customerId}`, {
+    ...payload,
   })
+
+  return response.data
+}
+
+export const editReview = async (
+  values: AddReviewFormData & { customerId: number }
+) => {
+  const { customerId, ...payload } = values
+  const response = await privateApi.patch(`review/${customerId}`, {
+    ...payload,
+  })
+
+  return response.data
+}
+
+export const deleteReview = async (customerId: number) => {
+  const response = await privateApi.delete(`review/${customerId}`)
 
   return response.data
 }

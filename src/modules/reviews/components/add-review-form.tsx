@@ -28,12 +28,28 @@ import {
 import { cn } from "@/lib/utils.ts"
 import { queryClient } from "@/modules/query/query-client.ts"
 
-import { addReview } from "../query-functions.ts"
+import { addReview, editReview, Review } from "../query-functions.ts"
 
-export function AddReviewForm({ customerId }: { customerId?: number }) {
-  const [showForm, setShowForm] = useState<boolean>(false)
+export function AddReviewForm({
+  customerId,
+  data,
+  isEdit,
+  onEdit,
+}: {
+  customerId?: number
+  data?: Review | null
+  isEdit?: boolean
+  onEdit?: () => void
+}) {
+  const [showForm, setShowForm] = useState<boolean>(!!isEdit)
   const mutation = useMutation({
     mutationFn: addReview,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["review", { customerId }], data)
+    },
+  })
+  const editMutation = useMutation({
+    mutationFn: editReview,
     onSuccess: (data) => {
       queryClient.setQueryData(["review", { customerId }], data)
     },
@@ -41,14 +57,23 @@ export function AddReviewForm({ customerId }: { customerId?: number }) {
   const form = useForm<AddReviewFormData>({
     resolver: addReviewFormResolver,
     defaultValues: {
-      rating: 0,
-      comment: undefined,
+      rating: data?.rating ?? 0,
+      comment: data?.comment ?? undefined,
     },
   })
 
-  function onSubmit(values: AddReviewFormData) {
-    const payload = { ...values, customerId }
-    mutation.mutateAsync(payload)
+  async function onSubmit(values: AddReviewFormData) {
+    if (customerId) {
+      const payload = { ...values, customerId }
+      if (isEdit) {
+        await editMutation.mutateAsync(payload)
+        if (onEdit) {
+          onEdit()
+        }
+      } else {
+        mutation.mutateAsync(payload)
+      }
+    }
   }
 
   return showForm ? (
@@ -120,7 +145,21 @@ export function AddReviewForm({ customerId }: { customerId?: number }) {
                     )}
                   />
                 </div>
-                <Button type="submit">Add review</Button>
+                <span className="flex gap-2">
+                  {isEdit && (
+                    <Button
+                      onClick={onEdit}
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                  <Button type="submit" className="w-full">
+                    {isEdit ? "Edit review" : "Add review"}
+                  </Button>
+                </span>
               </div>
             </div>
           </form>

@@ -1,6 +1,6 @@
-import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { isValidPhoneNumber } from "react-phone-number-input"
+import { z } from "zod"
 
 export const researchFormSchema = z
   .object({
@@ -13,6 +13,9 @@ export const researchFormSchema = z
       .string()
       .refine(isValidPhoneNumber, { message: "Enter a valid phone number" })
       .or(z.literal("").transform(() => undefined)),
+    rating: z.number().int().max(5).min(1).optional(),
+    sortBy: z.enum(["createdAt", "updatedAt"]).default("createdAt"),
+    order: z.enum(["asc", "desc"]).default("desc"),
   })
   .partial()
 
