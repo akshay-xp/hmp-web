@@ -1,18 +1,20 @@
-import { useAuthStore } from "@/modules/auth/auth-store"
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
-import { AppSidebar } from "@/components/app-sidebar"
+
+import { AppSidebar } from "@/components/app-sidebar.tsx"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/breadcrumb.tsx"
+import { Separator } from "@/components/ui/separator.tsx"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar.tsx"
+import { getUser } from "@/modules/account/account.apis.ts"
+import { useAuthStore } from "@/modules/auth/auth-store.ts"
 
 export const Route = createFileRoute("/_private")({
   beforeLoad: async ({ location }) => {
@@ -30,6 +32,11 @@ export const Route = createFileRoute("/_private")({
       }
     }
   },
+  loader: async ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData({
+      queryKey: ["user"],
+      queryFn: getUser,
+    }),
   component: LayoutComponent,
 })
 
