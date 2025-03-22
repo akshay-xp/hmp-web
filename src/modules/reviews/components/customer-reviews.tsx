@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu.tsx"
 import { Separator } from "@/components/ui/separator.tsx"
 import {
-  TooltipProvider,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -147,22 +146,20 @@ export function CustomerReviews() {
                             {format(new Date(review.updatedAt), "yyyy-MM-dd")}
                           </time>
                         </div>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="size-5"
-                              >
-                                <Flag className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Report</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="size-5"
+                            >
+                              <Flag className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Report</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                     </div>
                     <p className="mt-2 text-sm">{review.comment}</p>

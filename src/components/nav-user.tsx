@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
+import { useNavigate } from "@tanstack/react-router"
 import { BadgeCheck, ChevronsUpDown, CreditCard, LogOut } from "lucide-react"
 
 import {
@@ -27,6 +28,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar.tsx"
 export function NavUser() {
   const { isMobile } = useSidebar()
   const { theme, setTheme } = useTheme()
+  const navigate = useNavigate()
   const signout = useAuthStore((state) => state.signout)
   const { data, isSuccess } = useQuery({
     queryKey: ["user"],
@@ -87,7 +89,7 @@ export function NavUser() {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/account" })}>
                   <BadgeCheck />
                   Account
                 </DropdownMenuItem>

@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as PrivateImport } from './routes/_private'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as PrivateIndexImport } from './routes/_private/index'
+import { Route as PrivateAccountImport } from './routes/_private/account'
 import { Route as AuthSignupImport } from './routes/_auth/signup'
 import { Route as AuthSigninImport } from './routes/_auth/signin'
 import { Route as AuthResetPasswordImport } from './routes/_auth/reset-password'
@@ -34,6 +35,12 @@ const AuthRoute = AuthImport.update({
 const PrivateIndexRoute = PrivateIndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PrivateRoute,
+} as any)
+
+const PrivateAccountRoute = PrivateAccountImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => PrivateRoute,
 } as any)
 
@@ -107,6 +114,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignupImport
       parentRoute: typeof AuthImport
     }
+    '/_private/account': {
+      id: '/_private/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof PrivateAccountImport
+      parentRoute: typeof PrivateImport
+    }
     '/_private/': {
       id: '/_private/'
       path: '/'
@@ -136,10 +150,12 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface PrivateRouteChildren {
+  PrivateAccountRoute: typeof PrivateAccountRoute
   PrivateIndexRoute: typeof PrivateIndexRoute
 }
 
 const PrivateRouteChildren: PrivateRouteChildren = {
+  PrivateAccountRoute: PrivateAccountRoute,
   PrivateIndexRoute: PrivateIndexRoute,
 }
 
@@ -152,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof AuthResetPasswordRoute
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
+  '/account': typeof PrivateAccountRoute
   '/': typeof PrivateIndexRoute
 }
 
@@ -161,6 +178,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof AuthResetPasswordRoute
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
+  '/account': typeof PrivateAccountRoute
   '/': typeof PrivateIndexRoute
 }
 
@@ -172,6 +190,7 @@ export interface FileRoutesById {
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
+  '/_private/account': typeof PrivateAccountRoute
   '/_private/': typeof PrivateIndexRoute
 }
 
@@ -183,9 +202,17 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signin'
     | '/signup'
+    | '/account'
     | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/forgot-password' | '/reset-password' | '/signin' | '/signup' | '/'
+  to:
+    | ''
+    | '/forgot-password'
+    | '/reset-password'
+    | '/signin'
+    | '/signup'
+    | '/account'
+    | '/'
   id:
     | '__root__'
     | '/_auth'
@@ -194,6 +221,7 @@ export interface FileRouteTypes {
     | '/_auth/reset-password'
     | '/_auth/signin'
     | '/_auth/signup'
+    | '/_private/account'
     | '/_private/'
   fileRoutesById: FileRoutesById
 }
@@ -234,6 +262,7 @@ export const routeTree = rootRoute
     "/_private": {
       "filePath": "_private.tsx",
       "children": [
+        "/_private/account",
         "/_private/"
       ]
     },
@@ -252,6 +281,10 @@ export const routeTree = rootRoute
     "/_auth/signup": {
       "filePath": "_auth/signup.tsx",
       "parent": "/_auth"
+    },
+    "/_private/account": {
+      "filePath": "_private/account.tsx",
+      "parent": "/_private"
     },
     "/_private/": {
       "filePath": "_private/index.tsx",
