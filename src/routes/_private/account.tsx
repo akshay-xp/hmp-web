@@ -24,7 +24,7 @@ function RouteComponent() {
 
   return (
     isSuccess && (
-      <div className="flex flex-col gap-6 p-5 w-full max-w-lg mx-auto">
+      <div className="flex flex-col gap-6 p-5 w-full max-w-xl mx-auto">
         <div className="relative">
           <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight">
             {data.name || "Anonymous"}

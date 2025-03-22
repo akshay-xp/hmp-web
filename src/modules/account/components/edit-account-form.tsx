@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
 import { Button } from "@/components/ui/button.tsx"
@@ -17,7 +18,9 @@ import {
   FormMessage,
 } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
+import { queryClient } from "@/modules/query/query-client.ts"
 
+import { updateUser } from "../account.apis.ts"
 import {
   EditAccountFormData,
   editAccountFormResolver,
@@ -31,9 +34,15 @@ export function EditAccountForm({ email, name }: EditAccountFormData) {
       name,
     },
   })
+  const mutation = useMutation({
+    mutationFn: updateUser,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user"], data)
+    },
+  })
 
   async function onSubmit(values: EditAccountFormData) {
-    console.log(values)
+    mutation.mutateAsync(values)
   }
 
   return (
