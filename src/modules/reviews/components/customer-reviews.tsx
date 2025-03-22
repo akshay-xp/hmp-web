@@ -173,9 +173,13 @@ export function CustomerReviews() {
             ))}
           </>
         ))}
-        {hasNextPage && (
-          <button onClick={() => fetchNextPage()}>load more</button>
-        )}
+        <span className="flex justify-center">
+          {hasNextPage && (
+            <Button variant="outline" onClick={() => fetchNextPage()}>
+              Load More
+            </Button>
+          )}
+        </span>
       </>
     )
   }
