@@ -1,4 +1,8 @@
+import { useMutation } from "@tanstack/react-query"
+import { AxiosError } from "axios"
+import { Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button.tsx"
 import {
@@ -17,13 +21,16 @@ import {
   FormMessage,
 } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
+import { useAuthStore } from "@/modules/auth/auth-store.ts"
 
+import { changePassword } from "../account.apis.ts"
 import {
   ChangePasswordFormData,
   changePasswordFormResolver,
 } from "../schema/change-password.schema.ts"
 
 export function ChangePasswordForm() {
+  const signout = useAuthStore((state) => state.signout)
   const form = useForm<ChangePasswordFormData>({
     resolver: changePasswordFormResolver,
     defaultValues: {
@@ -32,9 +39,44 @@ export function ChangePasswordForm() {
       confirmPassword: "",
     },
   })
+  const mutation = useMutation({
+    mutationFn: changePassword,
+    onSuccess: () => {
+      toast.success("Your password has been successfully updated.")
+      form.reset()
+      signout()
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        if (error.status === 403) {
+          form.setError("root", {
+            message:
+              "The current password you entered is incorrect. Please try again.",
+          })
+        } else if (error.status === 400) {
+          form.setError("root", {
+            message:
+              typeof error.response?.data.message === "string"
+                ? error.response.data.message
+                : error.response?.data.message[0],
+          })
+        } else {
+          form.setError("root", {
+            message:
+              "Something went wrong while updating your password. Please try again later.",
+          })
+        }
+      } else {
+        form.setError("root", {
+          message:
+            "Something went wrong while updating your password. Please try again later.",
+        })
+      }
+    },
+  })
 
   async function onSubmit(values: ChangePasswordFormData) {
-    console.log(values)
+    mutation.mutateAsync(values)
   }
 
   return (
@@ -95,7 +137,15 @@ export function ChangePasswordForm() {
                     )}
                   />
                 </div>
-                <Button type="submit">Save Password</Button>
+                <FormMessage>{form.formState.errors.root?.message}</FormMessage>
+                {mutation.isPending ? (
+                  <Button disabled>
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </Button>
+                ) : (
+                  <Button type="submit">Save Password</Button>
+                )}
               </div>
             </div>
           </form>

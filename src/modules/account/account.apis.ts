@@ -1,5 +1,6 @@
 import { privateApi } from "../api/axios.ts"
 
+import { ChangePasswordFormData } from "./schema/change-password.schema.ts"
 import { EditAccountFormData } from "./schema/edit-account.schema.ts"
 
 type User = {
@@ -20,4 +21,13 @@ export async function updateUser(payload: EditAccountFormData): Promise<User> {
     ...payload,
   })
   return response.data
+}
+
+export async function changePassword(
+  values: ChangePasswordFormData
+): Promise<void> {
+  const { confirmPassword, ...payload } = values
+  await privateApi.patch("/users/me/password", {
+    ...payload,
+  })
 }
