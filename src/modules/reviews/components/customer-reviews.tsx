@@ -52,10 +52,10 @@ export function CustomerReviews() {
     enabled: !!customerId,
   })
 
-  if (isSuccess) {
+  if (customerId && isSuccess) {
     return (
       <>
-        <CustomerRatingChart />
+        <CustomerRatingChart customerId={customerId} />
         <div className="flex justify-between">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

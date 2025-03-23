@@ -34,6 +34,8 @@ type Reviews = {
   hasMore: boolean
 }
 
+type ReviewCount = number[]
+
 export const getCustomer = async (
   email?: string,
   phone?: string
@@ -113,6 +115,14 @@ export const editReview = async (
 
 export const deleteReview = async (customerId: number) => {
   const response = await privateApi.delete(`review/${customerId}`)
+
+  return response.data
+}
+
+export const getReviewsCount = async (
+  customerId: number
+): Promise<ReviewCount> => {
+  const response = await privateApi.get(`review/${customerId}/count`)
 
   return response.data
 }
