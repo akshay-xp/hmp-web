@@ -36,7 +36,12 @@ import {
 import { queryClient } from "@/modules/query/query-client.ts"
 import { Route } from "@/routes/_private/index.tsx"
 
-import { deleteReview, getCustomer, getReview } from "../query-functions.ts"
+import {
+  deleteReview,
+  getCustomer,
+  getReview,
+  getReviewTags,
+} from "../query-functions.ts"
 
 import { AddReviewForm } from "./add-review-form.tsx"
 import { RatingStars } from "./rating-stars.tsx"
@@ -49,6 +54,10 @@ export function ReviewSection() {
     enabled: !!(email || phone),
   })
   const customerId = customerQuery.data?.id
+  const { data: tags } = useQuery({
+    queryKey: ["tags"],
+    queryFn: () => getReviewTags(),
+  })
   const { data, isSuccess } = useQuery({
     queryKey: ["review", { customerId }],
     queryFn: () => getReview(customerId),
@@ -123,17 +132,17 @@ export function ReviewSection() {
           </CardContent>
           <CardFooter className="flex-col items-start gap-2 text-sm">
             <div className="flex gap-2">
-              <Badge variant="outline">
-                <ChevronUp /> Regular Customer
-              </Badge>
-              <Badge variant="outline">
-                <ChevronUp />
-                Polite
-              </Badge>
-              <Badge variant="secondary">
-                <ChevronDown />
-                Late Check-ins
-              </Badge>
+              {data.tags.map((tag) => (
+                <Badge variant="outline">
+                  {tags?.get(tag.tagId)?.type === "POSITIVE" ? (
+                    <ChevronUp />
+                  ) : (
+                    <ChevronDown />
+                  )}
+                  &nbsp;
+                  {tags?.get(tag.tagId)?.name}
+                </Badge>
+              ))}
             </div>
           </CardFooter>
         </Card>

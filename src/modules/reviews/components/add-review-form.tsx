@@ -1,8 +1,9 @@
-import { useMutation } from "@tanstack/react-query"
-import { Plus, StarIcon } from "lucide-react"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { ChevronDown, ChevronUp, Plus, StarIcon } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
+import { Badge } from "@/components/ui/badge.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import {
   Card,
@@ -21,6 +22,7 @@ import {
 } from "@/components/ui/form.tsx"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx"
 import { Textarea } from "@/components/ui/textarea.tsx"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group.tsx"
 import {
   AddReviewFormData,
   addReviewFormResolver,
@@ -28,7 +30,12 @@ import {
 import { cn } from "@/lib/utils.ts"
 import { queryClient } from "@/modules/query/query-client.ts"
 
-import { addReview, editReview, Review } from "../query-functions.ts"
+import {
+  addReview,
+  editReview,
+  getReviewTags,
+  Review,
+} from "../query-functions.ts"
 
 export function AddReviewForm({
   customerId,
@@ -42,6 +49,10 @@ export function AddReviewForm({
   onEdit?: () => void
 }) {
   const [showForm, setShowForm] = useState<boolean>(!!isEdit)
+  const { data: tags } = useQuery({
+    queryKey: ["tags"],
+    queryFn: () => getReviewTags(),
+  })
   const mutation = useMutation({
     mutationFn: addReview,
     onSuccess: (data) => {
@@ -59,6 +70,7 @@ export function AddReviewForm({
     defaultValues: {
       rating: data?.rating ?? 0,
       comment: data?.comment ?? undefined,
+      reviewTags: data?.tags.map((tag) => tag.tagId.toString()),
     },
   })
 
@@ -145,6 +157,44 @@ export function AddReviewForm({
                     )}
                   />
                 </div>
+                <FormField
+                  control={form.control}
+                  name="reviewTags"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Review Tags</FormLabel>
+                      <FormControl>
+                        <ToggleGroup
+                          type="multiple"
+                          className="items-start justify-start flex-wrap"
+                          value={field.value}
+                          onValueChange={(selectedTags) =>
+                            field.onChange(selectedTags)
+                          }
+                        >
+                          {tags &&
+                            Array.from(tags.values()).map((tag) => (
+                              <ToggleGroupItem
+                                value={tag.id.toString()}
+                                size="fit"
+                              >
+                                <Badge variant="outline">
+                                  {tag.type === "POSITIVE" ? (
+                                    <ChevronUp />
+                                  ) : (
+                                    <ChevronDown />
+                                  )}
+                                  &nbsp;
+                                  {tag.name}
+                                </Badge>
+                              </ToggleGroupItem>
+                            ))}
+                        </ToggleGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <span className="flex gap-2">
                   {isEdit && (
                     <Button

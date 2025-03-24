@@ -12,29 +12,33 @@ type Customer = {
 }
 
 export type Review = {
-  createdAt: string
-  updatedAt: string
   rating: number
   comment: string | null
   customerId: number
   businessId: number
+  createdAt: string
+  updatedAt: string
+  tags: {
+    tagId: number
+    customerId: number
+    businessId: number
+  }[]
 }
 
 type Reviews = {
-  reviews: {
-    rating: number
-    comment: string | null
-    customerId: number
-    businessId: number
-    createdAt: string
-    updatedAt: string
-  }[]
+  reviews: Review[]
   cursorA: number
   cursorB: number
   hasMore: boolean
 }
 
 type ReviewCount = number[]
+
+type Tag = {
+  id: number
+  name: string
+  type: "POSITIVE" | "NEGATIVE"
+}
 
 export const getCustomer = async (
   email?: string,
@@ -94,9 +98,10 @@ export const addCustomer = async (
 export const addReview = async (
   values: AddReviewFormData & { customerId: number }
 ) => {
-  const { customerId, ...payload } = values
+  const { customerId, reviewTags, ...payload } = values
   const response = await privateApi.post(`review/${customerId}`, {
     ...payload,
+    tags: reviewTags?.map(Number),
   })
 
   return response.data
@@ -105,9 +110,10 @@ export const addReview = async (
 export const editReview = async (
   values: AddReviewFormData & { customerId: number }
 ) => {
-  const { customerId, ...payload } = values
+  const { customerId, reviewTags, ...payload } = values
   const response = await privateApi.patch(`review/${customerId}`, {
     ...payload,
+    tags: reviewTags?.map(Number),
   })
 
   return response.data
@@ -125,4 +131,14 @@ export const getReviewsCount = async (
   const response = await privateApi.get(`review/${customerId}/count`)
 
   return response.data
+}
+
+export const getReviewTags = async (): Promise<Map<number, Tag>> => {
+  const response = await privateApi.get("review-tags")
+
+  const map = new Map()
+  response.data.map((tag: Tag) => {
+    map.set(tag.id, tag)
+  })
+  return map
 }
