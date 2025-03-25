@@ -32,7 +32,10 @@ type Reviews = {
   hasMore: boolean
 }
 
-type ReviewCount = number[]
+type ReviewCount = {
+  ratings: Record<number, number>
+  tags: Record<number, number>
+}
 
 type Tag = {
   id: number

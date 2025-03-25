@@ -1,8 +1,9 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { format } from "date-fns"
-import { ArrowUpDown, Filter, Flag } from "lucide-react"
+import { ArrowUpDown, ChevronDown, ChevronUp, Filter, Flag } from "lucide-react"
 
+import { Badge } from "@/components/ui/badge.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import {
   DropdownMenu,
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/tooltip.tsx"
 import { Route } from "@/routes/_private/index.tsx"
 
-import { getCustomer, getReviews } from "../query-functions.ts"
+import { getCustomer, getReviews, getReviewTags } from "../query-functions.ts"
 
 import { CustomerRatingChart } from "./customer-rating-chart.tsx"
 import { RatingStars } from "./rating-stars.tsx"
@@ -30,6 +31,10 @@ export function CustomerReviews() {
     queryKey: ["customer", { email, phone }],
     queryFn: () => getCustomer(email, phone),
     enabled: !!(email || phone),
+  })
+  const { data: tags } = useQuery({
+    queryKey: ["tags"],
+    queryFn: () => getReviewTags(),
   })
   const customerId = customerQuery.data?.id
 
@@ -135,8 +140,8 @@ export function CustomerReviews() {
           <>
             {page.reviews.map((review) => (
               <div key={review.businessId}>
-                <div className="flex items-start gap-4">
-                  <div className="flex-1">
+                <div className="flex flex-col items-start gap-4">
+                  <div className="flex-1 w-full">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
                       <div className="flex items-center justify-between w-full text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
@@ -162,8 +167,25 @@ export function CustomerReviews() {
                         </Tooltip>
                       </div>
                     </div>
-                    <p className="mt-2 text-sm">{review.comment}</p>
+                    {review.comment && (
+                      <p className="mt-2 text-sm">{review.comment}</p>
+                    )}
                   </div>
+                  {review.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {review.tags.map((tag) => (
+                        <Badge variant="outline">
+                          {tags?.get(tag.tagId)?.type === "POSITIVE" ? (
+                            <ChevronUp />
+                          ) : (
+                            <ChevronDown />
+                          )}
+                          &nbsp;
+                          {tags?.get(tag.tagId)?.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <Separator className="mt-6" />
               </div>

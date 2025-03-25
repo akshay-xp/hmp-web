@@ -131,7 +131,7 @@ export function ReviewSection() {
             <p className="text-sm">{data.comment}</p>
           </CardContent>
           <CardFooter className="flex-col items-start gap-2 text-sm">
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {data.tags.map((tag) => (
                 <Badge variant="outline">
                   {tags?.get(tag.tagId)?.type === "POSITIVE" ? (
