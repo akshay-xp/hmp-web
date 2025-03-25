@@ -184,7 +184,10 @@ export function AddReviewForm({
                                 value={tag.id.toString()}
                                 size="fit"
                               >
-                                <Badge variant="outline">
+                                <Badge
+                                  variant="outline"
+                                  className="hover:text-muted-foreground"
+                                >
                                   {tag.type === "POSITIVE" ? (
                                     <ChevronUp />
                                   ) : (
