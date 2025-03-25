@@ -41,12 +41,12 @@ export function AddReviewForm({
   customerId,
   data,
   isEdit,
-  onEdit,
+  toggleEditReviewForm,
 }: {
   customerId?: number
   data?: Review | null
   isEdit?: boolean
-  onEdit?: () => void
+  toggleEditReviewForm?: () => void
 }) {
   const [showForm, setShowForm] = useState<boolean>(!!isEdit)
   const { data: tags } = useQuery({
@@ -57,12 +57,16 @@ export function AddReviewForm({
     mutationFn: addReview,
     onSuccess: (data) => {
       queryClient.setQueryData(["review", { customerId }], data)
+      queryClient.invalidateQueries({ queryKey: ["reviews"] })
+      queryClient.invalidateQueries({ queryKey: ["reviews-count"] })
     },
   })
   const editMutation = useMutation({
     mutationFn: editReview,
     onSuccess: (data) => {
       queryClient.setQueryData(["review", { customerId }], data)
+      queryClient.invalidateQueries({ queryKey: ["reviews"] })
+      queryClient.invalidateQueries({ queryKey: ["reviews-count"] })
     },
   })
   const form = useForm<AddReviewFormData>({
@@ -74,13 +78,15 @@ export function AddReviewForm({
     },
   })
 
+  const toggleAddReviewForm = () => setShowForm(!showForm)
+
   async function onSubmit(values: AddReviewFormData) {
     if (customerId) {
       const payload = { ...values, customerId }
       if (isEdit) {
         await editMutation.mutateAsync(payload)
-        if (onEdit) {
-          onEdit()
+        if (toggleEditReviewForm) {
+          toggleEditReviewForm()
         }
       } else {
         mutation.mutateAsync(payload)
@@ -196,16 +202,16 @@ export function AddReviewForm({
                   )}
                 />
                 <span className="flex gap-2">
-                  {isEdit && (
-                    <Button
-                      onClick={onEdit}
-                      type="button"
-                      variant="outline"
-                      className="w-full"
-                    >
-                      Cancel
-                    </Button>
-                  )}
+                  <Button
+                    onClick={
+                      isEdit ? toggleEditReviewForm : toggleAddReviewForm
+                    }
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Cancel
+                  </Button>
                   <Button type="submit" className="w-full">
                     {isEdit ? "Edit review" : "Add review"}
                   </Button>

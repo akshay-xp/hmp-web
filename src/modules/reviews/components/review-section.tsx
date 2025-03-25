@@ -67,6 +67,8 @@ export function ReviewSection() {
     mutationFn: deleteReview,
     onSuccess: (data) => {
       queryClient.setQueryData(["review", { customerId }], data)
+      queryClient.invalidateQueries({ queryKey: ["reviews"] })
+      queryClient.invalidateQueries({ queryKey: ["reviews-count"] })
     },
   })
 
@@ -87,7 +89,7 @@ export function ReviewSection() {
         customerId={customerId}
         data={data}
         isEdit={isEdit}
-        onEdit={() => setIsEdit(!isEdit)}
+        toggleEditReviewForm={() => setIsEdit(!isEdit)}
       />
     )
   }
