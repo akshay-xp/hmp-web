@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { format } from "date-fns"
-import { ArrowUpDown, ChevronDown, ChevronUp, Filter, Flag } from "lucide-react"
+import { ArrowUpDown, ChevronDown, ChevronUp, Filter } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge.tsx"
 import { Button } from "@/components/ui/button.tsx"
@@ -12,17 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx"
 import { Separator } from "@/components/ui/separator.tsx"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip.tsx"
 import { Route } from "@/routes/_private/index.tsx"
 
 import { getCustomer, getReviews, getReviewTags } from "../query-functions.ts"
 
 import { CustomerRatingChart } from "./customer-rating-chart.tsx"
 import { RatingStars } from "./rating-stars.tsx"
+import { ReportButton } from "./report-button.tsx"
 
 export function CustomerReviews() {
   const { email, phone, rating, sortBy } = Route.useSearch()
@@ -151,20 +147,10 @@ export function CustomerReviews() {
                             {format(new Date(review.updatedAt), "yyyy-MM-dd")}
                           </time>
                         </div>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="size-5"
-                            >
-                              <Flag className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Report</p>
-                          </TooltipContent>
-                        </Tooltip>
+                        <ReportButton
+                          businessId={review.businessId}
+                          customerId={review.customerId}
+                        />
                       </div>
                     </div>
                     {review.comment && (

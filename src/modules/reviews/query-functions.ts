@@ -2,6 +2,8 @@ import { AddCustomerFormData } from "@/lib/forms/add-customer.form.ts"
 import { AddReviewFormData } from "@/lib/forms/add-review.form.ts"
 import { privateApi } from "@/modules/api/axios.ts"
 
+import { ReportReviewFormData } from "./schema/report-review.schema.ts"
+
 type Customer = {
   id: number
   name: string | null
@@ -144,4 +146,13 @@ export const getReviewTags = async (): Promise<Map<number, Tag>> => {
     map.set(tag.id, tag)
   })
   return map
+}
+
+export const reportReview = async (
+  values: ReportReviewFormData & { customerId: number; businessId: number }
+) => {
+  const response = await privateApi.post("review-reports", {
+    ...values,
+  })
+  return response.data
 }
