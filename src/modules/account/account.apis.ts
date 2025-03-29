@@ -3,10 +3,16 @@ import { privateApi } from "../api/axios.ts"
 import { ChangePasswordFormData } from "./schema/change-password.schema.ts"
 import { EditAccountFormData } from "./schema/edit-account.schema.ts"
 
+export enum Role {
+  ADMIN = "ADMIN",
+  BUSINESS = "BUSINESS",
+}
+
 type User = {
   id: number
   email: string
   name: string
+  role: Role
   createdAt: string
   updatedAt: string
 }

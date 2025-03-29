@@ -15,10 +15,12 @@ import { Route as PrivateImport } from './routes/_private'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as PrivateIndexImport } from './routes/_private/index'
 import { Route as PrivateAccountImport } from './routes/_private/account'
+import { Route as PrivateAdminImport } from './routes/_private/_admin'
 import { Route as AuthSignupImport } from './routes/_auth/signup'
 import { Route as AuthSigninImport } from './routes/_auth/signin'
 import { Route as AuthResetPasswordImport } from './routes/_auth/reset-password'
 import { Route as AuthForgotPasswordImport } from './routes/_auth/forgot-password'
+import { Route as PrivateAdminModerationImport } from './routes/_private/_admin/moderation'
 
 // Create/Update Routes
 
@@ -44,6 +46,11 @@ const PrivateAccountRoute = PrivateAccountImport.update({
   getParentRoute: () => PrivateRoute,
 } as any)
 
+const PrivateAdminRoute = PrivateAdminImport.update({
+  id: '/_admin',
+  getParentRoute: () => PrivateRoute,
+} as any)
+
 const AuthSignupRoute = AuthSignupImport.update({
   id: '/signup',
   path: '/signup',
@@ -66,6 +73,12 @@ const AuthForgotPasswordRoute = AuthForgotPasswordImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
   getParentRoute: () => AuthRoute,
+} as any)
+
+const PrivateAdminModerationRoute = PrivateAdminModerationImport.update({
+  id: '/moderation',
+  path: '/moderation',
+  getParentRoute: () => PrivateAdminRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -114,6 +127,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignupImport
       parentRoute: typeof AuthImport
     }
+    '/_private/_admin': {
+      id: '/_private/_admin'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PrivateAdminImport
+      parentRoute: typeof PrivateImport
+    }
     '/_private/account': {
       id: '/_private/account'
       path: '/account'
@@ -127,6 +147,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PrivateIndexImport
       parentRoute: typeof PrivateImport
+    }
+    '/_private/_admin/moderation': {
+      id: '/_private/_admin/moderation'
+      path: '/moderation'
+      fullPath: '/moderation'
+      preLoaderRoute: typeof PrivateAdminModerationImport
+      parentRoute: typeof PrivateAdminImport
     }
   }
 }
@@ -149,12 +176,26 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface PrivateAdminRouteChildren {
+  PrivateAdminModerationRoute: typeof PrivateAdminModerationRoute
+}
+
+const PrivateAdminRouteChildren: PrivateAdminRouteChildren = {
+  PrivateAdminModerationRoute: PrivateAdminModerationRoute,
+}
+
+const PrivateAdminRouteWithChildren = PrivateAdminRoute._addFileChildren(
+  PrivateAdminRouteChildren,
+)
+
 interface PrivateRouteChildren {
+  PrivateAdminRoute: typeof PrivateAdminRouteWithChildren
   PrivateAccountRoute: typeof PrivateAccountRoute
   PrivateIndexRoute: typeof PrivateIndexRoute
 }
 
 const PrivateRouteChildren: PrivateRouteChildren = {
+  PrivateAdminRoute: PrivateAdminRouteWithChildren,
   PrivateAccountRoute: PrivateAccountRoute,
   PrivateIndexRoute: PrivateIndexRoute,
 }
@@ -163,23 +204,25 @@ const PrivateRouteWithChildren =
   PrivateRoute._addFileChildren(PrivateRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '': typeof PrivateRouteWithChildren
+  '': typeof PrivateAdminRouteWithChildren
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/account': typeof PrivateAccountRoute
   '/': typeof PrivateIndexRoute
+  '/moderation': typeof PrivateAdminModerationRoute
 }
 
 export interface FileRoutesByTo {
-  '': typeof AuthRouteWithChildren
+  '': typeof PrivateAdminRouteWithChildren
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/account': typeof PrivateAccountRoute
   '/': typeof PrivateIndexRoute
+  '/moderation': typeof PrivateAdminModerationRoute
 }
 
 export interface FileRoutesById {
@@ -190,8 +233,10 @@ export interface FileRoutesById {
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
+  '/_private/_admin': typeof PrivateAdminRouteWithChildren
   '/_private/account': typeof PrivateAccountRoute
   '/_private/': typeof PrivateIndexRoute
+  '/_private/_admin/moderation': typeof PrivateAdminModerationRoute
 }
 
 export interface FileRouteTypes {
@@ -204,6 +249,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/account'
     | '/'
+    | '/moderation'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
@@ -213,6 +259,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/account'
     | '/'
+    | '/moderation'
   id:
     | '__root__'
     | '/_auth'
@@ -221,8 +268,10 @@ export interface FileRouteTypes {
     | '/_auth/reset-password'
     | '/_auth/signin'
     | '/_auth/signup'
+    | '/_private/_admin'
     | '/_private/account'
     | '/_private/'
+    | '/_private/_admin/moderation'
   fileRoutesById: FileRoutesById
 }
 
@@ -262,6 +311,7 @@ export const routeTree = rootRoute
     "/_private": {
       "filePath": "_private.tsx",
       "children": [
+        "/_private/_admin",
         "/_private/account",
         "/_private/"
       ]
@@ -282,6 +332,13 @@ export const routeTree = rootRoute
       "filePath": "_auth/signup.tsx",
       "parent": "/_auth"
     },
+    "/_private/_admin": {
+      "filePath": "_private/_admin.tsx",
+      "parent": "/_private",
+      "children": [
+        "/_private/_admin/moderation"
+      ]
+    },
     "/_private/account": {
       "filePath": "_private/account.tsx",
       "parent": "/_private"
@@ -289,6 +346,10 @@ export const routeTree = rootRoute
     "/_private/": {
       "filePath": "_private/index.tsx",
       "parent": "/_private"
+    },
+    "/_private/_admin/moderation": {
+      "filePath": "_private/_admin/moderation.tsx",
+      "parent": "/_private/_admin"
     }
   }
 }
