@@ -2,6 +2,8 @@ import { AddCustomerFormData } from "@/lib/forms/add-customer.form.ts"
 import { AddReviewFormData } from "@/lib/forms/add-review.form.ts"
 import { privateApi } from "@/modules/api/axios.ts"
 
+import { User } from "../account/account.apis.ts"
+
 import { ReportReviewFormData } from "./schema/report-review.schema.ts"
 
 type Customer = {
@@ -43,6 +45,12 @@ type Tag = {
   id: number
   name: string
   type: "POSITIVE" | "NEGATIVE"
+}
+
+type ReviewReport = {
+  id: number
+  reason: string
+  review: Review & { business: User }
 }
 
 export const getCustomer = async (
@@ -124,8 +132,15 @@ export const editReview = async (
   return response.data
 }
 
-export const deleteReview = async (customerId: number) => {
-  const response = await privateApi.delete(`review/${customerId}`)
+export const deleteReview = async (values: {
+  customerId: number
+  businessId: number
+}) => {
+  const response = await privateApi.delete(`review`, {
+    data: {
+      ...values,
+    },
+  })
 
   return response.data
 }
@@ -154,5 +169,15 @@ export const reportReview = async (
   const response = await privateApi.post("review-reports", {
     ...values,
   })
+  return response.data
+}
+
+export const getReports = async (): Promise<ReviewReport[]> => {
+  const response = await privateApi.get("review-reports")
+  return response.data
+}
+
+export const deleteReport = async (reportId: number) => {
+  const response = await privateApi.delete(`review-reports/${reportId}`)
   return response.data
 }

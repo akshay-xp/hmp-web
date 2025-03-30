@@ -8,7 +8,7 @@ export enum Role {
   BUSINESS = "BUSINESS",
 }
 
-type User = {
+export type User = {
   id: number
   email: string
   name: string

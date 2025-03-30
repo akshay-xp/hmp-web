@@ -159,7 +159,14 @@ export function ReviewSection() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => mutation.mutate(customerId!)}>
+              <AlertDialogAction
+                onClick={() =>
+                  mutation.mutate({
+                    customerId: data.customerId,
+                    businessId: data.businessId,
+                  })
+                }
+              >
                 Continue
               </AlertDialogAction>
             </AlertDialogFooter>
