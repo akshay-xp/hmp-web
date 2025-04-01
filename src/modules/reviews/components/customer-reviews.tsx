@@ -145,10 +145,7 @@ export function CustomerReviews() {
                             {format(new Date(review.updatedAt), "yyyy-MM-dd")}
                           </time>
                         </div>
-                        <ReportButton
-                          businessId={review.businessId}
-                          customerId={review.customerId}
-                        />
+                        <ReportButton reviewId={review.id} />
                       </div>
                     </div>
                     {review.comment && (

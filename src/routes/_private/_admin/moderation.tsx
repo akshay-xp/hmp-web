@@ -72,12 +72,7 @@ function RouteComponent() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  mutateReview.mutateAsync({
-                    businessId: report.review.businessId,
-                    customerId: report.review.customerId,
-                  })
-                }
+                onClick={() => mutateReview.mutateAsync(report.review.id)}
               >
                 Remove
               </Button>

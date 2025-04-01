@@ -34,11 +34,10 @@ import {
 } from "../schema/report-review.schema.ts"
 
 type Props = {
-  businessId: number
-  customerId: number
+  reviewId: number
 }
 
-export function ReportButton({ businessId, customerId }: Props) {
+export function ReportButton({ reviewId }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const toggleDialog = () => {
     setIsDialogOpen(!isDialogOpen)
@@ -61,8 +60,7 @@ export function ReportButton({ businessId, customerId }: Props) {
   async function onSubmit(values: ReportReviewFormData) {
     const payload = {
       ...values,
-      businessId,
-      customerId,
+      reviewId,
     }
     mutation.mutateAsync(payload)
   }

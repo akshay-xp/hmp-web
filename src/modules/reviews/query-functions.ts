@@ -162,7 +162,7 @@ export const getReviewTags = async (): Promise<Map<number, Tag>> => {
 }
 
 export const reportReview = async (
-  values: ReportReviewFormData & { customerId: number; businessId: number }
+  values: ReportReviewFormData & { reviewId: number }
 ) => {
   const response = await privateApi.post("review-reports", {
     ...values,
