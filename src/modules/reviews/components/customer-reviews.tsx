@@ -39,14 +39,12 @@ export function CustomerReviews() {
     queryFn: ({ pageParam }) =>
       getReviews(pageParam, customerId, rating, sortBy),
     initialPageParam: {
-      cursorA: -1,
-      cursorB: -1,
+      cursor: -1,
     },
     getNextPageParam: (lastPage) => {
       return lastPage.hasMore
         ? {
-            cursorA: lastPage.cursorA,
-            cursorB: lastPage.cursorB,
+            cursor: lastPage.cursor,
           }
         : undefined
     },

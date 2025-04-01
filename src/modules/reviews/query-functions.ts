@@ -16,6 +16,7 @@ type Customer = {
 }
 
 export type Review = {
+  id: number
   rating: number
   comment: string | null
   customerId: number
@@ -31,8 +32,7 @@ export type Review = {
 
 type Reviews = {
   reviews: Review[]
-  cursorA: number
-  cursorB: number
+  cursor: number
   hasMore: boolean
 }
 
@@ -70,24 +70,26 @@ export const getCustomer = async (
 export const getReview = async (
   customerId?: number
 ): Promise<Review | null> => {
-  const response = await privateApi.get(`/review/${customerId}`)
+  const response = await privateApi.get(
+    `/reviews/business/customer/${customerId}`
+  )
 
   return response.data
 }
 
 export const getReviews = async (
-  pageParam: { cursorA: number; cursorB: number },
+  pageParam: { cursor: number },
   customerId?: number,
   rating?: number,
   sortBy?: string
 ): Promise<Reviews> => {
   const cursors =
-    pageParam.cursorA !== -1 && pageParam.cursorB !== -1
+    pageParam.cursor !== -1
       ? {
           ...pageParam,
         }
       : undefined
-  const response = await privateApi.get(`/review/${customerId}/all`, {
+  const response = await privateApi.get(`/reviews/customer/${customerId}`, {
     params: {
       rating,
       sortBy,
@@ -112,7 +114,8 @@ export const addReview = async (
   values: AddReviewFormData & { customerId: number }
 ) => {
   const { customerId, reviewTags, ...payload } = values
-  const response = await privateApi.post(`review/${customerId}`, {
+  const response = await privateApi.post(`reviews`, {
+    customerId,
     ...payload,
     tags: reviewTags?.map(Number),
   })
@@ -121,10 +124,10 @@ export const addReview = async (
 }
 
 export const editReview = async (
-  values: AddReviewFormData & { customerId: number }
+  values: AddReviewFormData & { reviewId: number }
 ) => {
-  const { customerId, reviewTags, ...payload } = values
-  const response = await privateApi.patch(`review/${customerId}`, {
+  const { reviewId, reviewTags, ...payload } = values
+  const response = await privateApi.patch(`/reviews/review/${reviewId}`, {
     ...payload,
     tags: reviewTags?.map(Number),
   })
@@ -132,15 +135,8 @@ export const editReview = async (
   return response.data
 }
 
-export const deleteReview = async (values: {
-  customerId: number
-  businessId: number
-}) => {
-  const response = await privateApi.delete(`review`, {
-    data: {
-      ...values,
-    },
-  })
+export const deleteReview = async (reviewId: number) => {
+  const response = await privateApi.delete(`/reviews/review/${reviewId}`)
 
   return response.data
 }
@@ -148,7 +144,9 @@ export const deleteReview = async (values: {
 export const getReviewsCount = async (
   customerId: number
 ): Promise<ReviewCount> => {
-  const response = await privateApi.get(`review/${customerId}/count`)
+  const response = await privateApi.get(
+    `/reviews/customer/${customerId}/counts`
+  )
 
   return response.data
 }

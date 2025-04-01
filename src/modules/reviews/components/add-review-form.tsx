@@ -82,13 +82,14 @@ export function AddReviewForm({
 
   async function onSubmit(values: AddReviewFormData) {
     if (customerId) {
-      const payload = { ...values, customerId }
-      if (isEdit) {
+      if (isEdit && data) {
+        const payload = { ...values, reviewId: data.id }
         await editMutation.mutateAsync(payload)
         if (toggleEditReviewForm) {
           toggleEditReviewForm()
         }
       } else {
+        const payload = { ...values, customerId }
         mutation.mutateAsync(payload)
       }
     }
