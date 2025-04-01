@@ -33,7 +33,7 @@ function getOverallRating(ratings: Record<number, number>): number {
   for (const rating in ratings) {
     numerator += Number(rating) * ratings[rating]
   }
-  return Math.round((numerator / total) * 10) / 10
+  return total ? Math.round((numerator / total) * 10) / 10 : 0
 }
 
 function getTotalReviews(ratings: Record<number, number>): number {
