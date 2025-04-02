@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
+import { AxiosError } from "axios"
 import { useForm } from "react-hook-form"
 
 import { Button } from "@/components/ui/button.tsx"
@@ -34,18 +35,41 @@ export function AddCustomerForm({
   email?: string
   phone?: string
 }) {
-  const mutation = useMutation({
-    mutationFn: addCustomer,
-    onSuccess: (data) => {
-      queryClient.setQueryData(["customer", { email, phone }], data)
-    },
-  })
   const form = useForm<AddCustomerFormData>({
     resolver: addCustomerFormResolver,
     defaultValues: {
       email,
       phone,
       name: undefined,
+    },
+  })
+
+  const mutation = useMutation({
+    mutationFn: addCustomer,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["customer", { email, phone }], data)
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        switch (error.status) {
+          case 409:
+            form.setError("root", {
+              message:
+                typeof error.response?.data.message === "string"
+                  ? error.response.data.message
+                  : error.response?.data.message[0],
+            })
+            break
+          case 400:
+            form.setError("root", {
+              message:
+                typeof error.response?.data.message === "string"
+                  ? error.response.data.message
+                  : error.response?.data.message[0],
+            })
+            break
+        }
+      }
     },
   })
 
@@ -119,6 +143,7 @@ export function AddCustomerForm({
                     )}
                   />
                 </div>
+                <FormMessage>{form.formState.errors.root?.message}</FormMessage>
                 <Button type="submit">Add Customer</Button>
               </div>
             </div>

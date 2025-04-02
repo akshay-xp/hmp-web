@@ -57,7 +57,7 @@ export const getCustomer = async (
   email?: string,
   phone?: string
 ): Promise<Customer | null> => {
-  const response = await privateApi.get("/customer", {
+  const response = await privateApi.get("/customers", {
     params: {
       email,
       phone,
@@ -67,9 +67,7 @@ export const getCustomer = async (
   return response.data
 }
 
-export const getReview = async (
-  customerId?: number
-): Promise<Review | null> => {
+export const getReview = async (customerId?: number): Promise<Review> => {
   const response = await privateApi.get(
     `/reviews/business/customer/${customerId}`
   )
@@ -103,7 +101,7 @@ export const getReviews = async (
 export const addCustomer = async (
   values: AddCustomerFormData
 ): Promise<Customer> => {
-  const response = await privateApi.post("customer", {
+  const response = await privateApi.post("/customers", {
     ...values,
   })
 

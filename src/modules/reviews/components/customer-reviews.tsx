@@ -51,128 +51,131 @@ export function CustomerReviews() {
     enabled: !!customerId,
   })
 
-  if (customerId && isSuccess) {
+  if (customerId) {
     return (
       <>
         <CustomerRatingChart customerId={customerId} />
-        <div className="flex justify-between">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary">
-                {"Filter"}
-                <Filter />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate({ search: (prev) => ({ ...prev, rating: 1 }) })
-                }
-              >
-                1 ★
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate({ search: (prev) => ({ ...prev, rating: 2 }) })
-                }
-              >
-                2 ★
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate({ search: (prev) => ({ ...prev, rating: 3 }) })
-                }
-              >
-                3 ★
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate({ search: (prev) => ({ ...prev, rating: 4 }) })
-                }
-              >
-                4 ★
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate({ search: (prev) => ({ ...prev, rating: 5 }) })
-                }
-              >
-                5 ★
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary">
-                {"Sort By"}
-                <ArrowUpDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate({
-                    search: (prev) => ({ ...prev, sortBy: "createdAt" }),
-                  })
-                }
-              >
-                Recently Created
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate({
-                    search: (prev) => ({ ...prev, sortBy: "updatedAt" }),
-                  })
-                }
-              >
-                Recently Updated
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        {data.pages.map((page) => (
-          <>
-            {page.reviews.map((review) => (
-              <div key={review.businessId}>
-                <div className="flex flex-col items-start gap-4">
-                  <div className="flex-1 w-full">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
-                      <div className="flex items-center justify-between w-full text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <RatingStars rating={review.rating} />
-                          <span className="mx-2">•</span>
-                          <time dateTime={review.updatedAt}>
-                            {format(new Date(review.updatedAt), "yyyy-MM-dd")}
-                          </time>
+        {isSuccess && (
+          <div className="flex justify-between">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary">
+                  {"Filter"}
+                  <Filter />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigate({ search: (prev) => ({ ...prev, rating: 1 }) })
+                  }
+                >
+                  1 ★
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigate({ search: (prev) => ({ ...prev, rating: 2 }) })
+                  }
+                >
+                  2 ★
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigate({ search: (prev) => ({ ...prev, rating: 3 }) })
+                  }
+                >
+                  3 ★
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigate({ search: (prev) => ({ ...prev, rating: 4 }) })
+                  }
+                >
+                  4 ★
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigate({ search: (prev) => ({ ...prev, rating: 5 }) })
+                  }
+                >
+                  5 ★
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary">
+                  {"Sort By"}
+                  <ArrowUpDown />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigate({
+                      search: (prev) => ({ ...prev, sortBy: "createdAt" }),
+                    })
+                  }
+                >
+                  Recently Created
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigate({
+                      search: (prev) => ({ ...prev, sortBy: "updatedAt" }),
+                    })
+                  }
+                >
+                  Recently Updated
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
+        {isSuccess &&
+          data.pages.map((page) => (
+            <>
+              {page.reviews.map((review) => (
+                <div key={review.businessId}>
+                  <div className="flex flex-col items-start gap-4">
+                    <div className="flex-1 w-full">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                        <div className="flex items-center justify-between w-full text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <RatingStars rating={review.rating} />
+                            <span className="mx-2">•</span>
+                            <time dateTime={review.updatedAt}>
+                              {format(new Date(review.updatedAt), "yyyy-MM-dd")}
+                            </time>
+                          </div>
+                          <ReportButton reviewId={review.id} />
                         </div>
-                        <ReportButton reviewId={review.id} />
                       </div>
+                      {review.comment && (
+                        <p className="mt-2 text-sm">{review.comment}</p>
+                      )}
                     </div>
-                    {review.comment && (
-                      <p className="mt-2 text-sm">{review.comment}</p>
+                    {review.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {review.tags.map((tag) => (
+                          <Badge variant="outline">
+                            {tags?.get(tag.tagId)?.type === "POSITIVE" ? (
+                              <ChevronUp />
+                            ) : (
+                              <ChevronDown />
+                            )}
+                            &nbsp;
+                            {tags?.get(tag.tagId)?.name}
+                          </Badge>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  {review.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {review.tags.map((tag) => (
-                        <Badge variant="outline">
-                          {tags?.get(tag.tagId)?.type === "POSITIVE" ? (
-                            <ChevronUp />
-                          ) : (
-                            <ChevronDown />
-                          )}
-                          &nbsp;
-                          {tags?.get(tag.tagId)?.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
+                  <Separator className="mt-6" />
                 </div>
-                <Separator className="mt-6" />
-              </div>
-            ))}
-          </>
-        ))}
+              ))}
+            </>
+          ))}
         <span className="flex justify-center">
           {hasNextPage && (
             <Button variant="outline" onClick={() => fetchNextPage()}>
