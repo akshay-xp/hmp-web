@@ -27,14 +27,19 @@ import { AddCustomerForm } from "./add-customer-form.tsx"
 
 export function CustomerSection() {
   const { email, phone } = Route.useSearch()
-  const { data, isSuccess } = useQuery({
+  const { data, isSuccess, isError } = useQuery({
     queryKey: ["customer", { email, phone }],
     queryFn: () => getCustomer(email, phone),
     enabled: !!(email || phone),
   })
 
-  if (isSuccess) {
-    return data ? (
+  if (isError) {
+    return <AddCustomerForm email={email} phone={phone} />
+  }
+
+  return (
+    isSuccess &&
+    data && (
       <>
         <div>
           <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight">
@@ -47,8 +52,6 @@ export function CustomerSection() {
           </span>
         </div>
       </>
-    ) : (
-      <AddCustomerForm email={email} phone={phone} />
     )
-  }
+  )
 }
